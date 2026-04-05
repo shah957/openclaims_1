@@ -76,6 +76,7 @@ for (const group of optionalEnvGroups) {
     printKeyStatus(key, Boolean(process.env[key]));
   }
 }
+console.log("  [info] Receipt extraction can use OPENAI_API_KEY or RCAC_GENAI_API_KEY.");
 
 printSection("Required files");
 for (const file of requiredFiles) {

@@ -52,7 +52,10 @@ Required for the full product flow:
 
 Optional but recommended:
 
-- `OPENAI_API_KEY` for real receipt extraction
+- `OPENAI_API_KEY` for OpenAI-based receipt extraction
+- `RCAC_GENAI_API_KEY` for Purdue RCAC GenAI Studio receipt extraction
+- `RCAC_GENAI_BASE_URL` if you need to override the default RCAC endpoint
+- `RCAC_GENAI_MODEL` to pick a different RCAC model; defaults to `llama4:latest`
 - `RESEND_API_KEY` and `RESEND_FROM_EMAIL` for live email delivery
 - `DEMO_SEED_ENABLED` if you want to gate demo-only flows
 

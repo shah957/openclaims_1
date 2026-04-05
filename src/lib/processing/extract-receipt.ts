@@ -18,20 +18,43 @@ function createLowConfidenceFallback(): ExtractionResult {
   };
 }
 
+function getExtractionClientConfig() {
+  if (process.env.RCAC_GENAI_API_KEY) {
+    return {
+      apiKey: process.env.RCAC_GENAI_API_KEY,
+      baseURL: process.env.RCAC_GENAI_BASE_URL ?? "https://genai.rcac.purdue.edu/api",
+      model: process.env.RCAC_GENAI_MODEL ?? "llama4:latest",
+    };
+  }
+
+  if (process.env.OPENAI_API_KEY) {
+    return {
+      apiKey: process.env.OPENAI_API_KEY,
+      baseURL: undefined,
+      model: "gpt-4o",
+    };
+  }
+
+  return null;
+}
+
 export async function extractReceiptData(
   imageUrl: string,
 ): Promise<ExtractionResult> {
-  if (!process.env.OPENAI_API_KEY) {
+  const config = getExtractionClientConfig();
+
+  if (!config) {
     return createLowConfidenceFallback();
   }
 
   const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: config.apiKey,
+    baseURL: config.baseURL,
   });
 
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: config.model,
       temperature: 0,
       max_completion_tokens: 500,
       response_format: {
