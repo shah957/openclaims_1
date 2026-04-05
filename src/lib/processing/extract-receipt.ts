@@ -154,21 +154,21 @@ export async function extractReceiptData(input: {
   fileBuffer: Buffer;
   contentType?: string | null;
 }): Promise<ExtractionResult> {
-  const config = getExtractionClientConfig();
-  const rawText = await extractDocumentText(input.fileBuffer, input.contentType);
-
-  if (!rawText.trim()) {
-    return createLowConfidenceFallback();
-  }
-
-  if (!config) {
-    return createLowConfidenceFallback(rawText);
-  }
-
   try {
+    const config = getExtractionClientConfig();
+    const rawText = await extractDocumentText(input.fileBuffer, input.contentType);
+
+    if (!rawText.trim()) {
+      return createLowConfidenceFallback();
+    }
+
+    if (!config) {
+      return createLowConfidenceFallback(rawText);
+    }
+
     return await structureReceiptText(rawText, config);
   } catch (error) {
     console.error("[receipt-extraction]", error);
-    return createLowConfidenceFallback(rawText);
+    return createLowConfidenceFallback();
   }
 }

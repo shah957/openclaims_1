@@ -83,6 +83,17 @@ export async function POST(request: Request) {
     }
 
     const fileResponse = await fetch(signedUrlData.signedUrl);
+
+    if (!fileResponse.ok) {
+      return NextResponse.json(
+        {
+          error: "storage_error",
+          message: "Unable to download the uploaded document for processing.",
+        },
+        { status: 500 },
+      );
+    }
+
     const fileBuffer = Buffer.from(await fileResponse.arrayBuffer());
     const duplicateHash = computeDocumentHash(fileBuffer);
     const extraction = await extractReceiptData({
@@ -193,6 +204,7 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
+    console.error("[documents:process]", error);
     return NextResponse.json(
       {
         error: "server_error",
