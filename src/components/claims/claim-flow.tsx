@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { ClaimForm } from "@/components/claims/claim-form";
 import { VerifyButton } from "@/components/world-id/verify-button";
@@ -13,11 +15,13 @@ type ClaimFlowProps = {
 };
 
 export function ClaimFlow({ program, isDemoMode }: ClaimFlowProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [verifiedClaim, setVerifiedClaim] = useState<VerifiedClaimShell | null>(
     null,
   );
   const [duplicateMessage, setDuplicateMessage] = useState<string | null>(null);
-  const [submittedClaimId, setSubmittedClaimId] = useState<string | null>(null);
+  const submittedClaimId = searchParams.get("submittedClaimId");
 
   if (submittedClaimId) {
     return (
@@ -37,6 +41,23 @@ export function ClaimFlow({ program, isDemoMode }: ClaimFlowProps) {
         <p className="mt-4 text-slate-600">
           You can return to the status page later to check progress.
         </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link
+            className="rounded-full bg-[var(--color-primary)] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-95"
+            href={`/claim/${program.slug}/status?claimId=${submittedClaimId}`}
+          >
+            View Status Page
+          </Link>
+          <button
+            className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+            onClick={() => {
+              router.replace(`/claim/${program.slug}`);
+            }}
+            type="button"
+          >
+            Submit Another Claim
+          </button>
+        </div>
       </div>
     );
   }
@@ -139,7 +160,9 @@ export function ClaimFlow({ program, isDemoMode }: ClaimFlowProps) {
             <ClaimForm
               claimId={verifiedClaim.claimId}
               program={program}
-              onSubmitted={(claimId) => setSubmittedClaimId(claimId)}
+              onSubmitted={(claimId) => {
+                router.replace(`/claim/${program.slug}?submittedClaimId=${claimId}`);
+              }}
             />
           </div>
         ) : null}

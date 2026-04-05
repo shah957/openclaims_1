@@ -6,12 +6,17 @@ type ClaimStatusPageProps = {
   params: Promise<{
     slug: string;
   }>;
+  searchParams: Promise<{
+    claimId?: string;
+  }>;
 };
 
 export default async function ClaimStatusPage({
   params,
+  searchParams,
 }: ClaimStatusPageProps) {
   const { slug } = await params;
+  const resolvedSearchParams = await searchParams;
   const program = await getPublicProgramBySlug(slug);
 
   if (!program) {
@@ -29,12 +34,16 @@ export default async function ClaimStatusPage({
             Track your {program.name} submission
           </h1>
           <p className="mt-4 max-w-2xl text-slate-600">
-            Re-verify with World ID and we&apos;ll pull the claim associated with
-            your unique nullifier for this program.
+            {resolvedSearchParams.claimId
+              ? "This page loaded the claim you just submitted. You can bookmark it for local testing."
+              : "Re-verify with World ID and we&apos;ll pull the claim associated with your unique nullifier for this program."}
           </p>
         </section>
 
-        <ClaimStatusLookup program={program} />
+        <ClaimStatusLookup
+          initialClaimId={resolvedSearchParams.claimId}
+          program={program}
+        />
       </div>
     </main>
   );

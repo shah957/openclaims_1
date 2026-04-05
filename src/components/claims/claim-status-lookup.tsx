@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { IDKitResult } from "@worldcoin/idkit-core";
 import { IDKit, orbLegacy } from "@worldcoin/idkit-core";
 import QRCode from "react-qr-code";
@@ -11,7 +11,13 @@ import { VerificationStatus } from "@/components/world-id/verification-status";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { useToast } from "@/components/shared/toast-provider";
 
-export function ClaimStatusLookup({ program }: { program: PublicProgram }) {
+export function ClaimStatusLookup({
+  program,
+  initialClaimId,
+}: {
+  program: PublicProgram;
+  initialClaimId?: string;
+}) {
   const { pushToast } = useToast();
   const [state, setState] = useState<
     "idle" | "loading" | "verifying" | "success" | "error"
@@ -22,6 +28,36 @@ export function ClaimStatusLookup({ program }: { program: PublicProgram }) {
   const [connectorUri, setConnectorUri] = useState<string | null>(null);
   const [claim, setClaim] = useState<DashboardClaim | null>(null);
   const action = useMemo(() => getWorldAction(program.slug), [program.slug]);
+
+  useEffect(() => {
+    async function loadClaimFromId(claimId: string) {
+      setState("loading");
+      setMessage("Loading the claim from your submission link...");
+
+      try {
+        const response = await fetch(`/api/claims/${claimId}`);
+        const payload = await response.json();
+
+        if (!response.ok) {
+          throw new Error(payload.message ?? "Unable to load the submitted claim.");
+        }
+
+        setClaim(payload.data as DashboardClaim);
+        setState("success");
+        setMessage("Claim found.");
+      } catch (error) {
+        const nextError =
+          error instanceof Error ? error.message : "Unable to load your claim.";
+        setClaim(null);
+        setState("error");
+        setMessage(nextError);
+      }
+    }
+
+    if (initialClaimId) {
+      void loadClaimFromId(initialClaimId);
+    }
+  }, [initialClaimId]);
 
   async function handleLookup() {
     if (!process.env.NEXT_PUBLIC_WORLD_APP_ID) {
@@ -131,16 +167,18 @@ export function ClaimStatusLookup({ program }: { program: PublicProgram }) {
         </div>
       ) : null}
 
-      <button
-        className="w-full rounded-full bg-[var(--color-accent)] px-5 py-3 font-semibold text-white disabled:opacity-60"
-        disabled={state === "loading" || state === "verifying"}
-        onClick={handleLookup}
-        type="button"
-      >
-        {state === "loading" || state === "verifying"
-          ? "Looking Up Claim..."
-          : "Look Up Claim With World ID"}
-      </button>
+      {!initialClaimId ? (
+        <button
+          className="w-full rounded-full bg-[var(--color-accent)] px-5 py-3 font-semibold text-white disabled:opacity-60"
+          disabled={state === "loading" || state === "verifying"}
+          onClick={handleLookup}
+          type="button"
+        >
+          {state === "loading" || state === "verifying"
+            ? "Looking Up Claim..."
+            : "Look Up Claim With World ID"}
+        </button>
+      ) : null}
 
       {claim ? (
         <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm">
