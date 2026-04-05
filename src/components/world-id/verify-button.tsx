@@ -25,7 +25,9 @@ export function VerifyButton({
   onDuplicate,
 }: VerifyButtonProps) {
   const { pushToast } = useToast();
-  const bypassEnabled = process.env.NEXT_PUBLIC_WORLD_ID_BYPASS === "true";
+  const bypassEnabled =
+    process.env.NODE_ENV !== "production" &&
+    process.env.NEXT_PUBLIC_WORLD_ID_BYPASS === "true";
   const [state, setState] = useState<
     "idle" | "loading" | "verifying" | "success" | "duplicate" | "error"
   >("idle");

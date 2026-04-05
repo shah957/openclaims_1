@@ -31,6 +31,17 @@ export async function POST(request: Request) {
     const bypassEnabled = isWorldBypassEnabled();
     const useBypass = bypassEnabled && parsed.data.bypass === true;
 
+    if (parsed.data.bypass === true && !bypassEnabled) {
+      return NextResponse.json(
+        {
+          error: "bypass_disabled",
+          message:
+            "Local test bypass is disabled in production deployments. Use a real World ID verification instead.",
+        },
+        { status: 400 },
+      );
+    }
+
     if (!useBypass && !hasWorldConfig()) {
       return NextResponse.json(
         {
