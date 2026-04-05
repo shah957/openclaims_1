@@ -156,7 +156,7 @@ export function VerifyButton({
         <div className="flex flex-col items-center gap-4 rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm">
           <QRCode size={200} value={connectorUri} />
           <a
-            className="text-center text-sm font-medium text-[--color-accent] underline-offset-4 hover:underline"
+            className="text-center text-sm font-medium text-[var(--color-accent)] underline-offset-4 hover:underline"
             href={connectorUri}
           >
             Open in World App
@@ -165,7 +165,7 @@ export function VerifyButton({
       ) : null}
 
       <button
-        className="w-full rounded-full bg-[--color-accent] px-5 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full rounded-full bg-[var(--color-accent)] px-5 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
         disabled={state === "loading" || state === "verifying"}
         onClick={handleVerification}
         type="button"

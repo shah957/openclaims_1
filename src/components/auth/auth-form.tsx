@@ -74,10 +74,10 @@ export function AuthForm() {
   return (
     <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
       <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-md">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[--color-accent]">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-accent)]">
           Organizer Access
         </p>
-        <h1 className="mt-4 text-4xl font-bold text-[--color-primary]">
+        <h1 className="mt-4 text-4xl font-bold text-[var(--color-primary)]">
           Manage programs, review flagged claims, and export payouts.
         </h1>
         <p className="mt-4 text-slate-600">
@@ -87,11 +87,11 @@ export function AuthForm() {
         <div className="mt-8 grid gap-4">
           <div className="rounded-3xl bg-slate-50 p-4">
             <p className="text-sm font-medium text-slate-500">What unlocks next</p>
-            <p className="mt-2 text-lg font-semibold text-[--color-primary]">
+            <p className="mt-2 text-lg font-semibold text-[var(--color-primary)]">
               Program creation, dashboard analytics, manual review, and exports.
             </p>
           </div>
-          <div className="rounded-3xl border border-[--color-accent]/20 bg-[--color-accent]/5 p-4 text-sm text-slate-700">
+          <div className="rounded-3xl border border-[var(--color-accent)]/20 bg-[var(--color-accent)]/5 p-4 text-sm text-slate-700">
             If Supabase auth variables are not configured yet, the form will show
             an error instead of signing in.
           </div>
@@ -103,7 +103,7 @@ export function AuthForm() {
           <button
             className={`rounded-full px-4 py-2 ${
               mode === "sign-in"
-                ? "bg-[--color-primary] text-white"
+                ? "bg-[var(--color-primary)] text-white"
                 : "text-slate-600"
             }`}
             onClick={() => setMode("sign-in")}
@@ -114,7 +114,7 @@ export function AuthForm() {
           <button
             className={`rounded-full px-4 py-2 ${
               mode === "sign-up"
-                ? "bg-[--color-primary] text-white"
+                ? "bg-[var(--color-primary)] text-white"
                 : "text-slate-600"
             }`}
             onClick={() => setMode("sign-up")}
@@ -154,13 +154,13 @@ export function AuthForm() {
             />
           </div>
 
-          {error ? <p className="text-sm text-[--color-error]">{error}</p> : null}
+          {error ? <p className="text-sm text-[var(--color-error)]">{error}</p> : null}
           {message ? (
-            <p className="text-sm text-[--color-success]">{message}</p>
+            <p className="text-sm text-[var(--color-success)]">{message}</p>
           ) : null}
 
           <button
-            className="w-full rounded-full bg-[--color-primary] px-5 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-full bg-[var(--color-primary)] px-5 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
             disabled={isSubmitting}
             type="submit"
           >
@@ -174,7 +174,7 @@ export function AuthForm() {
 
         <div className="mt-6 text-sm text-slate-600">
           <Link
-            className="font-medium text-[--color-accent] underline-offset-4 hover:underline"
+            className="font-medium text-[var(--color-accent)] underline-offset-4 hover:underline"
             href="/dashboard"
           >
             Go to dashboard

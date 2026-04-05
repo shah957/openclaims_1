@@ -21,10 +21,10 @@ export default async function ClaimPage({ params }: ClaimPageProps) {
     <main className="min-h-screen px-6 py-10">
       <div className="mx-auto max-w-7xl space-y-8">
         <div className="space-y-3">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[--color-accent]">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-accent)]">
             OpenClaims Ops
           </p>
-          <h1 className="text-5xl font-bold tracking-tight text-[--color-primary]">
+          <h1 className="text-5xl font-bold tracking-tight text-[var(--color-primary)]">
             Submit your claim
           </h1>
           <p className="max-w-2xl text-lg text-slate-600">

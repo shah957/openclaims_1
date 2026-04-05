@@ -70,7 +70,7 @@ export function AnalyticsPanel({
   return (
     <section className="grid gap-6 xl:grid-cols-3">
       <article className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm xl:col-span-2">
-        <h2 className="text-xl font-semibold text-[--color-primary]">
+        <h2 className="text-xl font-semibold text-[var(--color-primary)]">
           Claims over time
         </h2>
         <div className="mt-4 h-72">
@@ -89,7 +89,7 @@ export function AnalyticsPanel({
       </article>
 
       <article className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-xl font-semibold text-[--color-primary]">
+        <h2 className="text-xl font-semibold text-[var(--color-primary)]">
           Status distribution
         </h2>
         <div className="mt-4 h-72">
@@ -111,7 +111,7 @@ export function AnalyticsPanel({
       </article>
 
       <article className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm xl:col-span-3">
-        <h2 className="text-xl font-semibold text-[--color-primary]">
+        <h2 className="text-xl font-semibold text-[var(--color-primary)]">
           Budget burn
         </h2>
         <div className="mt-4 h-56">

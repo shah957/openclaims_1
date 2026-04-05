@@ -123,7 +123,7 @@ export function ClaimStatusLookup({ program }: { program: PublicProgram }) {
         <div className="flex flex-col items-center gap-4 rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm">
           <QRCode size={200} value={connectorUri} />
           <a
-            className="text-sm font-medium text-[--color-accent] underline-offset-4 hover:underline"
+            className="text-sm font-medium text-[var(--color-accent)] underline-offset-4 hover:underline"
             href={connectorUri}
           >
             Open in World App
@@ -132,7 +132,7 @@ export function ClaimStatusLookup({ program }: { program: PublicProgram }) {
       ) : null}
 
       <button
-        className="w-full rounded-full bg-[--color-accent] px-5 py-3 font-semibold text-white disabled:opacity-60"
+        className="w-full rounded-full bg-[var(--color-accent)] px-5 py-3 font-semibold text-white disabled:opacity-60"
         disabled={state === "loading" || state === "verifying"}
         onClick={handleLookup}
         type="button"
@@ -147,7 +147,7 @@ export function ClaimStatusLookup({ program }: { program: PublicProgram }) {
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-sm font-medium text-slate-500">Claim ID</p>
-              <p className="mt-1 font-mono text-sm text-[--color-primary]">
+              <p className="mt-1 font-mono text-sm text-[var(--color-primary)]">
                 {claim.id}
               </p>
             </div>
@@ -157,13 +157,13 @@ export function ClaimStatusLookup({ program }: { program: PublicProgram }) {
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             <div className="rounded-2xl bg-slate-50 p-4">
               <p className="text-sm text-slate-500">Amount requested</p>
-              <p className="mt-2 text-lg font-semibold text-[--color-primary]">
+              <p className="mt-2 text-lg font-semibold text-[var(--color-primary)]">
                 ${claim.amount_requested.toFixed(2)}
               </p>
             </div>
             <div className="rounded-2xl bg-slate-50 p-4">
               <p className="text-sm text-slate-500">Submitted</p>
-              <p className="mt-2 text-lg font-semibold text-[--color-primary]">
+              <p className="mt-2 text-lg font-semibold text-[var(--color-primary)]">
                 {new Date(claim.submitted_at).toLocaleString()}
               </p>
             </div>

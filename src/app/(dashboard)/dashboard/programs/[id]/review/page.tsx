@@ -23,10 +23,10 @@ export default async function ReviewQueuePage({ params }: ReviewQueuePageProps) 
   return (
     <main className="space-y-6">
       <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-md">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[--color-accent]">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-accent)]">
           Review Queue
         </p>
-        <h1 className="mt-4 text-4xl font-bold text-[--color-primary]">
+        <h1 className="mt-4 text-4xl font-bold text-[var(--color-primary)]">
           Flagged claims for {dashboard.program.name}
         </h1>
         <p className="mt-4 text-slate-600">
@@ -48,7 +48,7 @@ export default async function ReviewQueuePage({ params }: ReviewQueuePageProps) 
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <p className="font-mono text-xs text-slate-500">{claim.id}</p>
-                  <h2 className="mt-2 text-xl font-semibold text-[--color-primary]">
+                  <h2 className="mt-2 text-xl font-semibold text-[var(--color-primary)]">
                     {claim.description || "Flagged claim"}
                   </h2>
                 </div>
@@ -58,19 +58,19 @@ export default async function ReviewQueuePage({ params }: ReviewQueuePageProps) 
               <div className="mt-5 grid gap-4 md:grid-cols-3">
                 <div className="rounded-2xl bg-slate-50 p-4">
                   <p className="text-sm text-slate-500">Amount</p>
-                  <p className="mt-2 text-lg font-semibold text-[--color-primary]">
+                  <p className="mt-2 text-lg font-semibold text-[var(--color-primary)]">
                     ${claim.amount_requested.toFixed(2)}
                   </p>
                 </div>
                 <div className="rounded-2xl bg-slate-50 p-4">
                   <p className="text-sm text-slate-500">Confidence</p>
-                  <p className="mt-2 text-lg font-semibold text-[--color-primary]">
+                  <p className="mt-2 text-lg font-semibold text-[var(--color-primary)]">
                     {claim.confidence_score?.toFixed(2) ?? "Pending"}
                   </p>
                 </div>
                 <div className="rounded-2xl bg-slate-50 p-4">
                   <p className="text-sm text-slate-500">Merchant</p>
-                  <p className="mt-2 text-lg font-semibold text-[--color-primary]">
+                  <p className="mt-2 text-lg font-semibold text-[var(--color-primary)]">
                     {claim.extraction_result?.merchant_name ?? "Unknown"}
                   </p>
                 </div>

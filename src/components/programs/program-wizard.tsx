@@ -104,7 +104,7 @@ export function ProgramWizard({ baseUrl }: ProgramWizardProps) {
             key={value}
             className={`rounded-full px-4 py-2 text-sm font-medium ${
               value === step
-                ? "bg-[--color-primary] text-white"
+                ? "bg-[var(--color-primary)] text-white"
                 : "bg-slate-100 text-slate-500"
             }`}
           >
@@ -192,7 +192,7 @@ export function ProgramWizard({ baseUrl }: ProgramWizardProps) {
               onChange={(event) => setBudgetTotal(event.target.value)}
             />
           </div>
-          <div className="rounded-3xl border border-[--color-accent]/20 bg-[--color-accent]/5 p-4 text-sm text-slate-700">
+          <div className="rounded-3xl border border-[var(--color-accent)]/20 bg-[var(--color-accent)]/5 p-4 text-sm text-slate-700">
             The MVP wizard currently hardcodes required proof type to receipt and
             allowed category to food. We can broaden this next.
           </div>
@@ -203,23 +203,23 @@ export function ProgramWizard({ baseUrl }: ProgramWizardProps) {
         <div className="space-y-4">
           <div className="rounded-3xl bg-slate-50 p-5">
             <p className="text-sm font-medium text-slate-500">Program summary</p>
-            <h2 className="mt-2 text-2xl font-semibold text-[--color-primary]">
+            <h2 className="mt-2 text-2xl font-semibold text-[var(--color-primary)]">
               {name}
             </h2>
             <p className="mt-3 text-sm text-slate-600">{description}</p>
           </div>
           <div className="rounded-3xl border border-slate-200 p-5">
             <p className="text-sm text-slate-500">Shareable claim link</p>
-            <p className="mt-2 break-all font-mono text-sm text-[--color-primary]">
+            <p className="mt-2 break-all font-mono text-sm text-[var(--color-primary)]">
               {shareableUrl}
             </p>
           </div>
         </div>
       ) : null}
 
-      {error ? <p className="text-sm text-[--color-error]">{error}</p> : null}
+      {error ? <p className="text-sm text-[var(--color-error)]">{error}</p> : null}
       {message ? (
-        <p className="text-sm text-[--color-success]">{message}</p>
+        <p className="text-sm text-[var(--color-success)]">{message}</p>
       ) : null}
 
       <div className="flex justify-between gap-3">
@@ -234,7 +234,7 @@ export function ProgramWizard({ baseUrl }: ProgramWizardProps) {
 
         {step < 4 ? (
           <button
-            className="rounded-full bg-[--color-primary] px-5 py-3 font-medium text-white"
+            className="rounded-full bg-[var(--color-primary)] px-5 py-3 font-medium text-white"
             onClick={() => setStep((current) => Math.min(4, current + 1))}
             type="button"
           >
@@ -242,7 +242,7 @@ export function ProgramWizard({ baseUrl }: ProgramWizardProps) {
           </button>
         ) : (
           <button
-            className="rounded-full bg-[--color-primary] px-5 py-3 font-medium text-white disabled:opacity-60"
+            className="rounded-full bg-[var(--color-primary)] px-5 py-3 font-medium text-white disabled:opacity-60"
             disabled={isSubmitting}
             onClick={handlePublish}
             type="button"

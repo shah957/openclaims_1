@@ -2,12 +2,12 @@ import type { DashboardStats } from "@/types/dashboard";
 
 export function StatsCards({ stats }: { stats: DashboardStats }) {
   const items = [
-    ["Total claims", stats.total.toString(), "text-[--color-primary]"],
-    ["Approved", stats.approved.toString(), "text-[--color-success]"],
-    ["Rejected", stats.rejected.toString(), "text-[--color-error]"],
-    ["Flagged", stats.flagged.toString(), "text-[--color-warning]"],
+    ["Total claims", stats.total.toString(), "text-[var(--color-primary)]"],
+    ["Approved", stats.approved.toString(), "text-[var(--color-success)]"],
+    ["Rejected", stats.rejected.toString(), "text-[var(--color-error)]"],
+    ["Flagged", stats.flagged.toString(), "text-[var(--color-warning)]"],
     ["Pending", stats.pending.toString(), "text-blue-700"],
-    ["Budget left", `$${stats.remainingBudget.toFixed(2)}`, "text-[--color-primary]"],
+    ["Budget left", `$${stats.remainingBudget.toFixed(2)}`, "text-[var(--color-primary)]"],
   ] as const;
 
   return (

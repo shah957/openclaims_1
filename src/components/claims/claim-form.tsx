@@ -197,11 +197,11 @@ export function ClaimForm({
                 key={document.id}
                 className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm"
               >
-                <span className="font-medium text-[--color-primary]">
+                <span className="font-medium text-[var(--color-primary)]">
                   {document.originalFilename}
                 </span>
                 <a
-                  className="text-[--color-accent] underline-offset-4 hover:underline"
+                  className="text-[var(--color-accent)] underline-offset-4 hover:underline"
                   href={document.fileUrl}
                   rel="noreferrer"
                   target="_blank"
@@ -214,10 +214,10 @@ export function ClaimForm({
         ) : null}
       </div>
 
-      {error ? <p className="text-sm text-[--color-error]">{error}</p> : null}
+      {error ? <p className="text-sm text-[var(--color-error)]">{error}</p> : null}
 
       <button
-        className="w-full rounded-full bg-[--color-primary] px-5 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full rounded-full bg-[var(--color-primary)] px-5 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
         disabled={isSubmitting}
         type="submit"
       >

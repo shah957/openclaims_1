@@ -96,12 +96,12 @@ export function DocumentUpload({
         {...getRootProps()}
         className={`rounded-[1.75rem] border border-dashed px-5 py-8 text-center transition ${
           isDragActive
-            ? "border-[--color-accent] bg-[--color-accent]/5"
+            ? "border-[var(--color-accent)] bg-[var(--color-accent)]/5"
             : "border-slate-300 bg-slate-50"
         } ${disabled ? "opacity-60" : ""}`}
       >
         <input {...getInputProps()} />
-        <p className="text-sm font-semibold text-[--color-primary]">
+        <p className="text-sm font-semibold text-[var(--color-primary)]">
           {isUploading
             ? "Uploading your document..."
             : "Drop a receipt here or tap to browse"}
@@ -112,7 +112,7 @@ export function DocumentUpload({
       </div>
 
       {error ? (
-        <p className="text-sm text-[--color-error]">{error}</p>
+        <p className="text-sm text-[var(--color-error)]">{error}</p>
       ) : null}
     </div>
   );

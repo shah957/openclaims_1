@@ -11,10 +11,10 @@ export default async function DashboardPage() {
   return (
     <main className="space-y-6">
       <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-md">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[--color-accent]">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-accent)]">
           Overview
         </p>
-        <h1 className="mt-4 text-4xl font-bold text-[--color-primary]">
+        <h1 className="mt-4 text-4xl font-bold text-[var(--color-primary)]">
           Keep the whole claims pipeline in view.
         </h1>
         <p className="mt-4 max-w-2xl text-slate-600">
@@ -24,7 +24,7 @@ export default async function DashboardPage() {
 
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
-            className="inline-flex rounded-full bg-[--color-primary] px-5 py-3 font-semibold text-white"
+            className="inline-flex rounded-full bg-[var(--color-primary)] px-5 py-3 font-semibold text-white"
             href="/dashboard/programs/new"
           >
             Launch The Program Wizard
@@ -48,7 +48,7 @@ export default async function DashboardPage() {
             <article className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h2 className="text-2xl font-semibold text-[--color-primary]">
+                  <h2 className="text-2xl font-semibold text-[var(--color-primary)]">
                     Recent claim activity
                   </h2>
                   <p className="mt-2 text-sm text-slate-600">
@@ -71,7 +71,7 @@ export default async function DashboardPage() {
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                           {claim.program_name}
                         </p>
-                        <p className="mt-2 font-medium text-[--color-primary]">
+                        <p className="mt-2 font-medium text-[var(--color-primary)]">
                           {claim.description || "Claim submission"}
                         </p>
                         <p className="mt-1 text-sm text-slate-500">
@@ -89,7 +89,7 @@ export default async function DashboardPage() {
             </article>
 
             <article className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-2xl font-semibold text-[--color-primary]">
+              <h2 className="text-2xl font-semibold text-[var(--color-primary)]">
                 Program portfolio
               </h2>
               <p className="mt-2 text-sm text-slate-600">
@@ -104,7 +104,7 @@ export default async function DashboardPage() {
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <p className="font-semibold text-[--color-primary]">
+                        <p className="font-semibold text-[var(--color-primary)]">
                           {program.name}
                         </p>
                         <p className="mt-1 text-sm text-slate-500">
@@ -116,7 +116,7 @@ export default async function DashboardPage() {
                     </div>
                     <div className="mt-4 flex flex-wrap gap-3">
                       <Link
-                        className="rounded-full bg-[--color-primary] px-4 py-2 text-sm font-semibold text-white"
+                        className="rounded-full bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white"
                         href={`/dashboard/programs/${program.id}`}
                       >
                         Open dashboard

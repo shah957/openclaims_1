@@ -4,7 +4,7 @@ export function ClaimDetail({ claim }: { claim: DashboardClaim }) {
   return (
     <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
       <section className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
-        <h3 className="text-lg font-semibold text-[--color-primary]">
+        <h3 className="text-lg font-semibold text-[var(--color-primary)]">
           Extracted document data
         </h3>
         {claim.extraction_result ? (
@@ -13,7 +13,7 @@ export function ClaimDetail({ claim }: { claim: DashboardClaim }) {
               <dt className="text-xs uppercase tracking-wide text-slate-500">
                 Merchant
               </dt>
-              <dd className="mt-2 text-sm font-medium text-[--color-primary]">
+              <dd className="mt-2 text-sm font-medium text-[var(--color-primary)]">
                 {claim.extraction_result.merchant_name ?? "Unknown"}
               </dd>
             </div>
@@ -21,7 +21,7 @@ export function ClaimDetail({ claim }: { claim: DashboardClaim }) {
               <dt className="text-xs uppercase tracking-wide text-slate-500">
                 Total amount
               </dt>
-              <dd className="mt-2 text-sm font-medium text-[--color-primary]">
+              <dd className="mt-2 text-sm font-medium text-[var(--color-primary)]">
                 {claim.extraction_result.total_amount === null
                   ? "Unknown"
                   : `$${claim.extraction_result.total_amount.toFixed(2)}`}
@@ -31,7 +31,7 @@ export function ClaimDetail({ claim }: { claim: DashboardClaim }) {
               <dt className="text-xs uppercase tracking-wide text-slate-500">
                 Date
               </dt>
-              <dd className="mt-2 text-sm font-medium text-[--color-primary]">
+              <dd className="mt-2 text-sm font-medium text-[var(--color-primary)]">
                 {claim.extraction_result.date ?? "Unknown"}
               </dd>
             </div>
@@ -39,7 +39,7 @@ export function ClaimDetail({ claim }: { claim: DashboardClaim }) {
               <dt className="text-xs uppercase tracking-wide text-slate-500">
                 Confidence
               </dt>
-              <dd className="mt-2 text-sm font-medium text-[--color-primary]">
+              <dd className="mt-2 text-sm font-medium text-[var(--color-primary)]">
                 {claim.extraction_result.confidence.toFixed(2)}
               </dd>
             </div>
@@ -52,7 +52,7 @@ export function ClaimDetail({ claim }: { claim: DashboardClaim }) {
       </section>
 
       <section className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
-        <h3 className="text-lg font-semibold text-[--color-primary]">
+        <h3 className="text-lg font-semibold text-[var(--color-primary)]">
           Rules engine results
         </h3>
         {claim.rule_check_result?.length ? (
@@ -62,7 +62,7 @@ export function ClaimDetail({ claim }: { claim: DashboardClaim }) {
                 key={`${claim.id}-${rule.rule}-${index}`}
                 className="rounded-2xl bg-white px-4 py-3 text-sm text-slate-700"
               >
-                <span className="font-semibold text-[--color-primary]">
+                <span className="font-semibold text-[var(--color-primary)]">
                   {rule.rule}
                 </span>
                 <span className="mx-2 text-slate-400">·</span>

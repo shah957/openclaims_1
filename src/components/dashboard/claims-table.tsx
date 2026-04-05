@@ -35,14 +35,14 @@ export function ClaimsTable({
               <tr key={claim.id} className="border-t border-slate-100">
                 <td className="px-4 py-4">
                   <p className="font-mono text-xs text-slate-500">{claim.id}</p>
-                  <p className="mt-1 font-medium text-[--color-primary]">
+                  <p className="mt-1 font-medium text-[var(--color-primary)]">
                     {claim.description || "No description"}
                   </p>
                 </td>
                 <td className="px-4 py-4">
                   <StatusBadge status={claim.status as never} />
                 </td>
-                <td className="px-4 py-4 font-medium text-[--color-primary]">
+                <td className="px-4 py-4 font-medium text-[var(--color-primary)]">
                   ${claim.amount_requested.toFixed(2)}
                 </td>
                 <td className="px-4 py-4 text-slate-600">{claim.category}</td>

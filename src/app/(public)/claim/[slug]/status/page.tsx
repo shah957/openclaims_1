@@ -22,10 +22,10 @@ export default async function ClaimStatusPage({
     <main className="min-h-screen px-6 py-10">
       <div className="mx-auto max-w-4xl space-y-8">
         <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-md">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[--color-accent]">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-accent)]">
             Claim Status
           </p>
-          <h1 className="mt-4 text-4xl font-bold text-[--color-primary]">
+          <h1 className="mt-4 text-4xl font-bold text-[var(--color-primary)]">
             Track your {program.name} submission
           </h1>
           <p className="mt-4 max-w-2xl text-slate-600">

@@ -25,7 +25,7 @@ export function ClaimFlow({ program, isDemoMode }: ClaimFlowProps) {
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-green-700">
           Claim Submitted
         </p>
-        <h2 className="mt-4 text-3xl font-bold text-[--color-primary]">
+        <h2 className="mt-4 text-3xl font-bold text-[var(--color-primary)]">
           Your claim is now processing.
         </h2>
         <p className="mt-4 text-slate-700">
@@ -46,10 +46,10 @@ export function ClaimFlow({ program, isDemoMode }: ClaimFlowProps) {
       <section className="space-y-6 rounded-[2rem] border border-slate-200 bg-white p-8 shadow-md">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[--color-accent]">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-accent)]">
               Public Claim Link
             </p>
-            <h1 className="mt-4 text-4xl font-bold text-[--color-primary]">
+            <h1 className="mt-4 text-4xl font-bold text-[var(--color-primary)]">
               {program.name}
             </h1>
           </div>
@@ -61,13 +61,13 @@ export function ClaimFlow({ program, isDemoMode }: ClaimFlowProps) {
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="rounded-3xl bg-slate-50 p-4">
             <p className="text-sm text-slate-500">Max claim</p>
-            <p className="mt-2 text-xl font-semibold text-[--color-primary]">
+            <p className="mt-2 text-xl font-semibold text-[var(--color-primary)]">
               ${program.rules.max_amount_per_claim ?? "N/A"}
             </p>
           </div>
           <div className="rounded-3xl bg-slate-50 p-4">
             <p className="text-sm text-slate-500">Deadline</p>
-            <p className="mt-2 text-xl font-semibold text-[--color-primary]">
+            <p className="mt-2 text-xl font-semibold text-[var(--color-primary)]">
               {program.rules.deadline
                 ? new Date(program.rules.deadline).toLocaleString()
                 : "Open"}
@@ -75,8 +75,8 @@ export function ClaimFlow({ program, isDemoMode }: ClaimFlowProps) {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-[--color-accent]/20 bg-[--color-accent]/5 p-5">
-          <p className="text-sm font-semibold text-[--color-accent]">
+        <div className="rounded-3xl border border-[var(--color-accent)]/20 bg-[var(--color-accent)]/5 p-5">
+          <p className="text-sm font-semibold text-[var(--color-accent)]">
             Why verification comes first
           </p>
           <p className="mt-2 text-sm leading-7 text-slate-700">
@@ -96,10 +96,10 @@ export function ClaimFlow({ program, isDemoMode }: ClaimFlowProps) {
 
       <section className="space-y-6 rounded-[2rem] border border-slate-200 bg-white p-8 shadow-md">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[--color-accent]">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-accent)]">
             Step 1
           </p>
-          <h2 className="mt-4 text-3xl font-bold text-[--color-primary]">
+          <h2 className="mt-4 text-3xl font-bold text-[var(--color-primary)]">
             Verify With World ID
           </h2>
         </div>
@@ -124,10 +124,10 @@ export function ClaimFlow({ program, isDemoMode }: ClaimFlowProps) {
         {verifiedClaim ? (
           <div className="space-y-6">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[--color-accent]">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-accent)]">
                 Step 2
               </p>
-              <h2 className="mt-4 text-3xl font-bold text-[--color-primary]">
+              <h2 className="mt-4 text-3xl font-bold text-[var(--color-primary)]">
                 Submit Your Claim
               </h2>
               <p className="mt-3 text-slate-600">

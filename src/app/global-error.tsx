@@ -17,10 +17,10 @@ export default function GlobalError({
     <html lang="en">
       <body className="min-h-screen bg-slate-100 px-6 py-12">
         <div className="mx-auto max-w-3xl rounded-[2rem] border border-red-200 bg-white p-10 text-center shadow-md">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[--color-error]">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-error)]">
             Something went wrong
           </p>
-          <h1 className="mt-4 text-4xl font-bold text-[--color-primary]">
+          <h1 className="mt-4 text-4xl font-bold text-[var(--color-primary)]">
             OpenClaims Ops hit an unexpected error.
           </h1>
           <p className="mt-4 text-slate-600">
@@ -28,7 +28,7 @@ export default function GlobalError({
             variables or backend service configuration.
           </p>
           <button
-            className="mt-8 rounded-full bg-[--color-primary] px-5 py-3 text-sm font-semibold text-white"
+            className="mt-8 rounded-full bg-[var(--color-primary)] px-5 py-3 text-sm font-semibold text-white"
             onClick={() => reset()}
             type="button"
           >

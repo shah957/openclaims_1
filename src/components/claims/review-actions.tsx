@@ -79,7 +79,7 @@ export function ReviewActions({
 
   return (
     <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
-      <h3 className="text-lg font-semibold text-[--color-primary]">
+      <h3 className="text-lg font-semibold text-[var(--color-primary)]">
         Reviewer actions
       </h3>
 
@@ -107,14 +107,14 @@ export function ReviewActions({
           />
         </div>
 
-        {error ? <p className="text-sm text-[--color-error]">{error}</p> : null}
+        {error ? <p className="text-sm text-[var(--color-error)]">{error}</p> : null}
         {message ? (
-          <p className="text-sm text-[--color-success]">{message}</p>
+          <p className="text-sm text-[var(--color-success)]">{message}</p>
         ) : null}
 
         <div className="flex flex-wrap gap-3">
           <button
-            className="rounded-full bg-[--color-success] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            className="rounded-full bg-[var(--color-success)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
             disabled={isSubmitting}
             onClick={() => submitDecision("manually_approved")}
             type="button"
@@ -122,7 +122,7 @@ export function ReviewActions({
             Approve
           </button>
           <button
-            className="rounded-full bg-[--color-error] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            className="rounded-full bg-[var(--color-error)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
             disabled={isSubmitting}
             onClick={() => submitDecision("manually_rejected")}
             type="button"

@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className="min-h-full font-sans text-[--color-text]">
+      <body className="min-h-full font-sans text-[var(--color-text)]">
         <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
