@@ -2,9 +2,13 @@
 
 import { useMemo, useState } from "react";
 import type { IDKitResult } from "@worldcoin/idkit-core";
-import { IDKit, orbLegacy } from "@worldcoin/idkit-core";
+import { IDKit } from "@worldcoin/idkit-core";
 import QRCode from "react-qr-code";
-import { getWorldAction } from "@/lib/world-id/config";
+import {
+  getWorldAction,
+  getWorldErrorMessage,
+  getWorldLegacyPreset,
+} from "@/lib/world-id/config";
 import type { VerifiedClaimShell } from "@/types/world-id";
 import { VerificationStatus } from "@/components/world-id/verification-status";
 import { useToast } from "@/components/shared/toast-provider";
@@ -105,6 +109,10 @@ export function VerifyButton({
         );
       }
 
+      const signal =
+        globalThis.crypto?.randomUUID?.() ??
+        `claim-attempt-${Date.now().toString()}`;
+
       const request = await IDKit.request({
         app_id: process.env.NEXT_PUBLIC_WORLD_APP_ID as `app_${string}`,
         action,
@@ -114,13 +122,7 @@ export function VerifyButton({
             : "staging",
         rp_context: rpSignaturePayload.data,
         allow_legacy_proofs: true,
-      }).preset(
-        orbLegacy({
-          signal:
-            globalThis.crypto?.randomUUID?.() ??
-            `claim-attempt-${Date.now().toString()}`,
-        }),
-      );
+      }).preset(getWorldLegacyPreset(signal));
 
       setConnectorUri(request.connectorURI || null);
       setState("verifying");
@@ -133,9 +135,7 @@ export function VerifyButton({
       const completion = await request.pollUntilCompletion();
 
       if (!completion.success) {
-        throw new Error(
-          `World ID did not complete successfully: ${completion.error}`,
-        );
+        throw new Error(getWorldErrorMessage(completion.error));
       }
 
       const proof = completion.result as IDKitResult;
@@ -184,6 +184,7 @@ export function VerifyButton({
         error instanceof Error
           ? error.message
           : "Verification did not complete successfully.";
+      console.error("[world-id:verify]", nextError);
       setState("error");
       setMessage(nextError);
       pushToast({

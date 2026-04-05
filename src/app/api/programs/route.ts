@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { hasSupabaseConfig } from "@/lib/env";
+import { getWorldAction } from "@/lib/world-id/config";
 import { createServerClientForRequest, createServiceRoleClient } from "@/lib/supabase/server";
 
 const programSchema = z.object({
@@ -119,7 +120,7 @@ export async function POST(request: Request) {
       .insert({
         name: parsed.data.name,
         slug: parsed.data.slug,
-        world_id_action: `openclaims-${parsed.data.slug}`,
+        world_id_action: getWorldAction(parsed.data.slug),
         description: parsed.data.description,
         rules: parsed.data.rules,
         budget_total: parsed.data.budgetTotal,

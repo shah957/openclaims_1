@@ -1,7 +1,11 @@
-import { signRequest } from "@worldcoin/idkit/signing";
+import { signRequest } from "@worldcoin/idkit-core/signing";
 
 export function createRpContext(action: string) {
-  const signature = signRequest(action, process.env.WORLD_RP_SIGNING_KEY!, 60 * 5);
+  const signature = signRequest({
+    signingKeyHex: process.env.WORLD_RP_SIGNING_KEY!,
+    action,
+    ttl: 60 * 5,
+  });
 
   return {
     rp_id: process.env.WORLD_RP_ID!,
