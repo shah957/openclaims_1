@@ -1,4 +1,4 @@
-import { orbLegacy, type IDKitErrorCode } from "@worldcoin/idkit-core";
+import { deviceLegacy, type IDKitErrorCode } from "@worldcoin/idkit-core";
 
 const DEFAULT_WORLD_ACTION = "openclaims-verify";
 
@@ -8,7 +8,7 @@ export function getWorldAction(programSlug?: string) {
 }
 
 export function getWorldLegacyPreset() {
-  return orbLegacy();
+  return deviceLegacy();
 }
 
 export function getWorldErrorMessage(error: IDKitErrorCode | string) {
