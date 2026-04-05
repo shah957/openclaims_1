@@ -33,6 +33,17 @@ function createLowConfidenceFallback(rawText?: string): ExtractionResult {
     )
       ? "food"
       : "other";
+  const identifiedFields = [merchant, dateMatch?.[1] ?? null, totalAmount].filter(Boolean).length;
+  const confidence =
+    normalizedText.length === 0
+      ? 0.2
+      : identifiedFields >= 3
+        ? 0.62
+        : identifiedFields === 2
+          ? 0.54
+          : normalizedText.length > 40
+            ? 0.45
+            : 0.28;
 
   return {
     merchant_name: merchant,
@@ -41,16 +52,33 @@ function createLowConfidenceFallback(rawText?: string): ExtractionResult {
     currency: "USD",
     line_items: [],
     category_guess: categoryGuess,
-    confidence: normalizedText.length > 40 ? 0.45 : 0.2,
+    confidence,
+    debug: {
+      source: "heuristic",
+      provider: "none",
+      raw_text: normalizedText || undefined,
+    },
   };
 }
 
 function getExtractionClientConfig() {
+  if (process.env.GEMINI_API_KEY) {
+    return {
+      apiKey: process.env.GEMINI_API_KEY,
+      baseURL:
+        process.env.GEMINI_BASE_URL ??
+        "https://generativelanguage.googleapis.com/v1beta/openai/",
+      model: process.env.GEMINI_MODEL ?? "gemini-3-flash-preview",
+      provider: "gemini" as const,
+    };
+  }
+
   if (process.env.RCAC_GENAI_API_KEY) {
     return {
       apiKey: process.env.RCAC_GENAI_API_KEY,
       baseURL: process.env.RCAC_GENAI_BASE_URL ?? "https://genai.rcac.purdue.edu/api",
       model: process.env.RCAC_GENAI_MODEL ?? "llama4:latest",
+      provider: "rcac" as const,
     };
   }
 
@@ -59,25 +87,95 @@ function getExtractionClientConfig() {
       apiKey: process.env.OPENAI_API_KEY,
       baseURL: undefined,
       model: "gpt-4o",
+      provider: "openai" as const,
     };
   }
 
   return null;
 }
 
-async function runImageOcr(fileBuffer: Buffer): Promise<string> {
+function buildImageDataUrl(fileBuffer: Buffer, contentType: string | null | undefined) {
+  const mimeType = contentType?.trim() || "image/jpeg";
+  return `data:${mimeType};base64,${fileBuffer.toString("base64")}`;
+}
+
+async function extractReceiptDataWithVision(input: {
+  fileBuffer: Buffer;
+  contentType?: string | null;
+  config: NonNullable<ReturnType<typeof getExtractionClientConfig>>;
+}): Promise<ExtractionResult> {
+  const openai = new OpenAI({
+    apiKey: input.config.apiKey,
+    baseURL: input.config.baseURL,
+  });
+
+  const response = await openai.chat.completions.create({
+    model: input.config.model,
+    temperature: 0,
+    response_format: {
+      type: "json_object",
+    },
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a receipt data extraction system for reimbursement claims. Return ONLY valid JSON with merchant_name, date, total_amount, currency, line_items, category_guess, confidence. Use null when uncertain, prefer USD when currency is not explicit, and keep confidence between 0 and 1.",
+      },
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: "Extract the structured fields from this receipt or proof document.",
+          },
+          {
+            type: "image_url",
+            image_url: {
+              url: buildImageDataUrl(input.fileBuffer, input.contentType),
+            },
+          },
+        ],
+      },
+    ],
+  });
+
+  const content = response.choices[0]?.message?.content;
+
+  if (!content) {
+    return createLowConfidenceFallback();
+  }
+
+  const parsed = JSON.parse(content) as ExtractionResult;
+
+  return {
+    ...parsed,
+    debug: {
+      source: "llm",
+      provider: input.config.provider,
+      model: input.config.model,
+      llm_output_raw: content,
+    },
+  };
+}
+
+async function runImageOcr(fileBuffer: Buffer): Promise<{ text: string; engine: "tesseract" }> {
   const { createWorker } = await import("tesseract.js");
   const worker = await createWorker("eng");
 
   try {
     const result = await worker.recognize(fileBuffer);
-    return result.data.text ?? "";
+    return {
+      text: result.data.text ?? "",
+      engine: "tesseract",
+    };
   } finally {
     await worker.terminate();
   }
 }
 
-async function extractTextFromPdf(fileBuffer: Buffer): Promise<string> {
+async function extractTextFromPdf(
+  fileBuffer: Buffer,
+): Promise<{ text: string; engine: "pdf-text" | "pdf-ocr" }> {
   const { PDFParse } = await import("pdf-parse");
   const parser = new PDFParse({ data: new Uint8Array(fileBuffer) });
 
@@ -86,17 +184,27 @@ async function extractTextFromPdf(fileBuffer: Buffer): Promise<string> {
     const extractedText = textResult.text?.trim() ?? "";
 
     if (extractedText.length >= 24) {
-      return extractedText;
+      return {
+        text: extractedText,
+        engine: "pdf-text",
+      };
     }
 
     const screenshotResult = await parser.getScreenshot({ first: 1, scale: 1.5 });
     const firstPage = screenshotResult.pages[0]?.data;
 
     if (!firstPage) {
-      return extractedText;
+      return {
+        text: extractedText,
+        engine: "pdf-text",
+      };
     }
 
-    return await runImageOcr(Buffer.from(firstPage));
+    const ocrResult = await runImageOcr(Buffer.from(firstPage));
+    return {
+      text: ocrResult.text,
+      engine: "pdf-ocr",
+    };
   } finally {
     await parser.destroy();
   }
@@ -105,7 +213,7 @@ async function extractTextFromPdf(fileBuffer: Buffer): Promise<string> {
 async function extractDocumentText(
   fileBuffer: Buffer,
   contentType: string | null | undefined,
-): Promise<string> {
+): Promise<{ text: string; engine: "tesseract" | "pdf-text" | "pdf-ocr" }> {
   if (contentType?.includes("pdf")) {
     return extractTextFromPdf(fileBuffer);
   }
@@ -116,6 +224,7 @@ async function extractDocumentText(
 async function structureReceiptText(
   rawText: string,
   config: NonNullable<ReturnType<typeof getExtractionClientConfig>>,
+  ocrEngine: "tesseract" | "pdf-text" | "pdf-ocr",
 ): Promise<ExtractionResult> {
   const openai = new OpenAI({
     apiKey: config.apiKey,
@@ -144,10 +253,33 @@ async function structureReceiptText(
   const content = response.choices[0]?.message?.content;
 
   if (!content) {
-    return createLowConfidenceFallback(rawText);
+    return {
+      ...createLowConfidenceFallback(rawText),
+      debug: {
+        source: "llm",
+        provider: config.baseURL ? "rcac" : "openai",
+        model: config.model,
+        ocr_engine: ocrEngine,
+        raw_text: rawText,
+        llm_input_excerpt: rawText.slice(0, 4000),
+        llm_output_raw: null,
+      },
+    };
   }
 
-  return JSON.parse(content) as ExtractionResult;
+  const parsed = JSON.parse(content) as ExtractionResult;
+  return {
+    ...parsed,
+    debug: {
+      source: "llm",
+      provider: config.baseURL ? "rcac" : "openai",
+      model: config.model,
+      ocr_engine: ocrEngine,
+      raw_text: rawText,
+      llm_input_excerpt: rawText.slice(0, 4000),
+      llm_output_raw: content,
+    },
+  };
 }
 
 export async function extractReceiptData(input: {
@@ -156,17 +288,38 @@ export async function extractReceiptData(input: {
 }): Promise<ExtractionResult> {
   try {
     const config = getExtractionClientConfig();
-    const rawText = await extractDocumentText(input.fileBuffer, input.contentType);
+
+    if (config?.provider === "gemini" && !input.contentType?.includes("pdf")) {
+      return await extractReceiptDataWithVision({
+        fileBuffer: input.fileBuffer,
+        contentType: input.contentType,
+        config,
+      });
+    }
+
+    const extractionInput = await extractDocumentText(
+      input.fileBuffer,
+      input.contentType,
+    );
+    const rawText = extractionInput.text;
 
     if (!rawText.trim()) {
       return createLowConfidenceFallback();
     }
 
     if (!config) {
-      return createLowConfidenceFallback(rawText);
+      return {
+        ...createLowConfidenceFallback(rawText),
+        debug: {
+          source: "heuristic",
+          provider: "none",
+          ocr_engine: extractionInput.engine,
+          raw_text: rawText,
+        },
+      };
     }
 
-    return await structureReceiptText(rawText, config);
+    return await structureReceiptText(rawText, config, extractionInput.engine);
   } catch (error) {
     console.error("[receipt-extraction]", error);
     return createLowConfidenceFallback();

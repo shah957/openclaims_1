@@ -8,42 +8,92 @@ export function ClaimDetail({ claim }: { claim: DashboardClaim }) {
           Extracted document data
         </h3>
         {claim.extraction_result ? (
-          <dl className="mt-4 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl bg-white p-4">
-              <dt className="text-xs uppercase tracking-wide text-slate-500">
-                Merchant
-              </dt>
-              <dd className="mt-2 text-sm font-medium text-[var(--color-primary)]">
-                {claim.extraction_result.merchant_name ?? "Unknown"}
-              </dd>
-            </div>
-            <div className="rounded-2xl bg-white p-4">
-              <dt className="text-xs uppercase tracking-wide text-slate-500">
-                Total amount
-              </dt>
-              <dd className="mt-2 text-sm font-medium text-[var(--color-primary)]">
-                {claim.extraction_result.total_amount === null
-                  ? "Unknown"
-                  : `$${claim.extraction_result.total_amount.toFixed(2)}`}
-              </dd>
-            </div>
-            <div className="rounded-2xl bg-white p-4">
-              <dt className="text-xs uppercase tracking-wide text-slate-500">
-                Date
-              </dt>
-              <dd className="mt-2 text-sm font-medium text-[var(--color-primary)]">
-                {claim.extraction_result.date ?? "Unknown"}
-              </dd>
-            </div>
-            <div className="rounded-2xl bg-white p-4">
-              <dt className="text-xs uppercase tracking-wide text-slate-500">
-                Confidence
-              </dt>
-              <dd className="mt-2 text-sm font-medium text-[var(--color-primary)]">
-                {claim.extraction_result.confidence.toFixed(2)}
-              </dd>
-            </div>
-          </dl>
+          <div className="mt-4 space-y-4">
+            <dl className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-2xl bg-white p-4">
+                <dt className="text-xs uppercase tracking-wide text-slate-500">
+                  Merchant
+                </dt>
+                <dd className="mt-2 text-sm font-medium text-[var(--color-primary)]">
+                  {claim.extraction_result.merchant_name ?? "Unknown"}
+                </dd>
+              </div>
+              <div className="rounded-2xl bg-white p-4">
+                <dt className="text-xs uppercase tracking-wide text-slate-500">
+                  Total amount
+                </dt>
+                <dd className="mt-2 text-sm font-medium text-[var(--color-primary)]">
+                  {claim.extraction_result.total_amount === null
+                    ? "Unknown"
+                    : `$${claim.extraction_result.total_amount.toFixed(2)}`}
+                </dd>
+              </div>
+              <div className="rounded-2xl bg-white p-4">
+                <dt className="text-xs uppercase tracking-wide text-slate-500">
+                  Date
+                </dt>
+                <dd className="mt-2 text-sm font-medium text-[var(--color-primary)]">
+                  {claim.extraction_result.date ?? "Unknown"}
+                </dd>
+              </div>
+              <div className="rounded-2xl bg-white p-4">
+                <dt className="text-xs uppercase tracking-wide text-slate-500">
+                  Confidence
+                </dt>
+                <dd className="mt-2 text-sm font-medium text-[var(--color-primary)]">
+                  {claim.extraction_result.confidence.toFixed(2)}
+                </dd>
+              </div>
+            </dl>
+
+            {claim.extraction_result.debug ? (
+              <div className="space-y-3">
+                <div className="rounded-2xl bg-white p-4">
+                  <p className="text-xs uppercase tracking-wide text-slate-500">
+                    Debug metadata
+                  </p>
+                  <p className="mt-2 text-sm text-slate-700">
+                    Source:{" "}
+                    <span className="font-semibold text-[var(--color-primary)]">
+                      {claim.extraction_result.debug.source}
+                    </span>
+                    {" · "}
+                    Provider:{" "}
+                    <span className="font-semibold text-[var(--color-primary)]">
+                      {claim.extraction_result.debug.provider ?? "unknown"}
+                    </span>
+                    {" · "}
+                    OCR:{" "}
+                    <span className="font-semibold text-[var(--color-primary)]">
+                      {claim.extraction_result.debug.ocr_engine ?? "unknown"}
+                    </span>
+                  </p>
+                </div>
+
+                {claim.extraction_result.debug.raw_text ? (
+                  <div className="rounded-2xl bg-white p-4">
+                    <p className="text-xs uppercase tracking-wide text-slate-500">
+                      OCR text
+                    </p>
+                    <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap break-words text-xs text-slate-700">
+                      {claim.extraction_result.debug.raw_text}
+                    </pre>
+                  </div>
+                ) : null}
+
+                {claim.extraction_result.debug.llm_output_raw ? (
+                  <div className="rounded-2xl bg-white p-4">
+                    <p className="text-xs uppercase tracking-wide text-slate-500">
+                      Llama output
+                    </p>
+                    <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap break-words text-xs text-slate-700">
+                      {claim.extraction_result.debug.llm_output_raw}
+                    </pre>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
         ) : (
           <p className="mt-4 text-sm text-slate-500">
             No extraction data is available yet.

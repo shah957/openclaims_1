@@ -53,6 +53,9 @@ Required for the full product flow:
 Optional but recommended:
 
 - `NEXT_PUBLIC_WORLD_ID_BYPASS` and `WORLD_ID_BYPASS` for local-only World ID bypass during testing
+- `GEMINI_API_KEY` for Gemini-based receipt extraction
+- `GEMINI_BASE_URL` to override the Gemini OpenAI-compatible endpoint
+- `GEMINI_MODEL` to choose the Gemini extraction model; defaults to `gemini-3-flash-preview`
 - `OPENAI_API_KEY` for OpenAI-based receipt extraction
 - `RCAC_GENAI_API_KEY` for Purdue RCAC GenAI Studio receipt extraction
 - `RCAC_GENAI_BASE_URL` if you need to override the default RCAC endpoint

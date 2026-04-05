@@ -24,4 +24,13 @@ export interface ExtractionResult {
   line_items: Array<{ description: string; amount: number }>;
   category_guess: AllowedCategory;
   confidence: number;
+  debug?: {
+    source: "llm" | "heuristic";
+    provider?: "gemini" | "rcac" | "openai" | "none";
+    model?: string;
+    ocr_engine?: "tesseract" | "pdf-text" | "pdf-ocr";
+    raw_text?: string;
+    llm_input_excerpt?: string;
+    llm_output_raw?: string | null;
+  };
 }
