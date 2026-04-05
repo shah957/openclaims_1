@@ -40,34 +40,34 @@ a {
   text-decoration: none;
 }
 
-:is(a, button, div)[class*="bg-[var(--color-primary)]"] {
+:is(a, button)[class*="bg-[var(--color-primary)]"] {
   color: #ffffff !important;
 }
 
-:is(a, button, div)[class*="bg-[var(--color-accent)]"] {
+:is(a, button)[class*="bg-[var(--color-accent)]"] {
   color: #ffffff !important;
 }
 
-:is(a, button, div)[class*="bg-[var(--color-success)]"] {
+:is(a, button)[class*="bg-[var(--color-success)]"] {
   color: #ffffff !important;
 }
 
-:is(a, button, div)[class*="bg-[var(--color-error)]"] {
+:is(a, button)[class*="bg-[var(--color-error)]"] {
   color: #ffffff !important;
 }
 
-:is(a, button, div)[class*="bg-[var(--color-primary)]"] * {
+:is(a, button)[class*="bg-[var(--color-primary)]"] * {
   color: inherit;
 }
 
-:is(a, button, div)[class*="bg-[var(--color-accent)]"] * {
+:is(a, button)[class*="bg-[var(--color-accent)]"] * {
   color: inherit;
 }
 
-:is(a, button, div)[class*="bg-[var(--color-success)]"] * {
+:is(a, button)[class*="bg-[var(--color-success)]"] * {
   color: inherit;
 }
 
-:is(a, button, div)[class*="bg-[var(--color-error)]"] * {
+:is(a, button)[class*="bg-[var(--color-error)]"] * {
   color: inherit;
 }
