@@ -17,6 +17,14 @@ type ClaimRouteProps = {
   }>;
 };
 
+function getCommittedAmountForStatus(status: string, amount: number | null, fallback: number) {
+  if (!["auto_approved", "manually_approved"].includes(status)) {
+    return 0;
+  }
+
+  return Number(amount ?? fallback);
+}
+
 export async function GET(_: Request, { params }: ClaimRouteProps) {
   const { id } = await params;
 
@@ -91,7 +99,7 @@ export async function PATCH(request: Request, { params }: ClaimRouteProps) {
     const supabase = createServiceRoleClient();
     const { data: claim } = await supabase
       .from("claims")
-      .select("id, program_id, claim_contact_email")
+      .select("id, program_id, claim_contact_email, status, amount_approved, amount_requested")
       .eq("id", id)
       .single();
 
@@ -102,6 +110,22 @@ export async function PATCH(request: Request, { params }: ClaimRouteProps) {
           message: "Claim not found.",
         },
         { status: 404 },
+      );
+    }
+
+    const { data: program, error: programError } = await supabase
+      .from("programs")
+      .select("id, budget_committed")
+      .eq("id", claim.program_id)
+      .single();
+
+    if (programError || !program) {
+      return NextResponse.json(
+        {
+          error: "server_error",
+          message: programError?.message ?? "Unable to load the parent program.",
+        },
+        { status: 500 },
       );
     }
 
@@ -117,14 +141,27 @@ export async function PATCH(request: Request, { params }: ClaimRouteProps) {
       );
     }
 
+    const nextApprovedAmount =
+      parsed.data.status === "manually_approved"
+        ? parsed.data.amountApproved ?? targetClaim.amount_requested
+        : null;
+    const previousCommittedAmount = getCommittedAmountForStatus(
+      claim.status,
+      claim.amount_approved,
+      Number(claim.amount_requested ?? targetClaim.amount_requested),
+    );
+    const nextCommittedAmount = getCommittedAmountForStatus(
+      parsed.data.status,
+      nextApprovedAmount,
+      targetClaim.amount_requested,
+    );
+    const budgetDelta = nextCommittedAmount - previousCommittedAmount;
+
     const { data, error } = await supabase
       .from("claims")
       .update({
         status: parsed.data.status,
-        amount_approved:
-          parsed.data.status === "manually_approved"
-            ? parsed.data.amountApproved ?? targetClaim.amount_requested
-            : null,
+        amount_approved: nextApprovedAmount,
         reviewer_notes: parsed.data.reviewerNotes,
         reviewed_by: organizer.id,
         reviewed_at: new Date().toISOString(),
@@ -143,6 +180,28 @@ export async function PATCH(request: Request, { params }: ClaimRouteProps) {
         },
         { status: 500 },
       );
+    }
+
+    if (budgetDelta !== 0) {
+      const { error: budgetError } = await supabase
+        .from("programs")
+        .update({
+          budget_committed: Math.max(
+            Number(program.budget_committed ?? 0) + budgetDelta,
+            0,
+          ),
+        })
+        .eq("id", claim.program_id);
+
+      if (budgetError) {
+        return NextResponse.json(
+          {
+            error: "server_error",
+            message: budgetError.message,
+          },
+          { status: 500 },
+        );
+      }
     }
 
     await supabase.from("audit_log").insert({
