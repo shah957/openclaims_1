@@ -52,6 +52,7 @@ Required for the full product flow:
 
 Optional but recommended:
 
+- `NEXT_PUBLIC_WORLD_ID_BYPASS` and `WORLD_ID_BYPASS` for local-only World ID bypass during testing
 - `OPENAI_API_KEY` for OpenAI-based receipt extraction
 - `RCAC_GENAI_API_KEY` for Purdue RCAC GenAI Studio receipt extraction
 - `RCAC_GENAI_BASE_URL` if you need to override the default RCAC endpoint
@@ -78,6 +79,8 @@ The app is designed for Vercel plus Supabase.
 3. Apply the Supabase migration for `claim_contact_email`.
 4. Verify the deployed `/api/rp-signature` and `/api/verify-proof` routes.
 5. Test the public claim flow, duplicate-human protection, duplicate-document flow, review queue, and CSV export in the deployed environment.
+
+For local testing only, you can enable a public-claim bypass by setting both `NEXT_PUBLIC_WORLD_ID_BYPASS=true` and `WORLD_ID_BYPASS=true`. The bypass is disabled in production builds.
 
 ## Documentation map
 

@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import type { IDKitResult } from "@worldcoin/idkit-core";
 import { z } from "zod";
-import { hasSupabaseConfig, hasWorldConfig } from "@/lib/env";
+import { hasSupabaseConfig, hasWorldConfig, isWorldBypassEnabled } from "@/lib/env";
 import { getDemoProgramBySlug } from "@/lib/demo-programs";
 import { getPublicProgramBySlug } from "@/lib/programs";
 import { createServiceRoleClient } from "@/lib/supabase/server";
@@ -10,12 +10,28 @@ import { verifyWorldProof } from "@/lib/world-id/verify";
 
 const requestSchema = z.object({
   programSlug: z.string().min(1),
-  proof: z.custom<IDKitResult>(),
+  proof: z.custom<IDKitResult>().optional(),
+  bypass: z.boolean().optional(),
 });
 
 export async function POST(request: Request) {
   try {
-    if (!hasWorldConfig()) {
+    const parsed = requestSchema.safeParse(await request.json());
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        {
+          error: "invalid_request",
+          message: "programSlug is required.",
+        },
+        { status: 400 },
+      );
+    }
+
+    const bypassEnabled = isWorldBypassEnabled();
+    const useBypass = bypassEnabled && parsed.data.bypass === true;
+
+    if (!useBypass && !hasWorldConfig()) {
       return NextResponse.json(
         {
           error: "config_error",
@@ -23,18 +39,6 @@ export async function POST(request: Request) {
             "World ID credentials are not configured. Add your environment variables before verifying proofs.",
         },
         { status: 500 },
-      );
-    }
-
-    const parsed = requestSchema.safeParse(await request.json());
-
-    if (!parsed.success) {
-      return NextResponse.json(
-        {
-          error: "invalid_request",
-          message: "programSlug and proof are required.",
-        },
-        { status: 400 },
       );
     }
 
@@ -50,27 +54,46 @@ export async function POST(request: Request) {
       );
     }
 
-    const verification = await verifyWorldProof(parsed.data.proof);
-    const nullifierHash =
-      verification.result.nullifier_hash ??
-      verification.result.nullifier ??
-      verification.result.results?.[0]?.nullifier;
+    let nullifierHash: string | null = null;
+    let verificationLevel = "unknown";
 
-    if (!verification.ok || !nullifierHash) {
-      return NextResponse.json(
-        {
-          error: "verification_failed",
-          message:
-            verification.result.detail ??
-            verification.result.message ??
-            "World ID proof verification failed.",
-        },
-        { status: verification.status || 400 },
-      );
+    if (useBypass) {
+      nullifierHash = `bypass-${randomUUID()}`;
+      verificationLevel = "unknown";
+    } else {
+      if (!parsed.data.proof) {
+        return NextResponse.json(
+          {
+            error: "invalid_request",
+            message: "programSlug and proof are required.",
+          },
+          { status: 400 },
+        );
+      }
+
+      const verification = await verifyWorldProof(parsed.data.proof);
+      nullifierHash =
+        verification.result.nullifier_hash ??
+        verification.result.nullifier ??
+        verification.result.results?.[0]?.nullifier ??
+        null;
+
+      if (!verification.ok || !nullifierHash) {
+        return NextResponse.json(
+          {
+            error: "verification_failed",
+            message:
+              verification.result.detail ??
+              verification.result.message ??
+              "World ID proof verification failed.",
+          },
+          { status: verification.status || 400 },
+        );
+      }
+
+      verificationLevel =
+        verification.result.results?.[0]?.identifier ?? "unknown";
     }
-
-    const verificationLevel =
-      verification.result.results?.[0]?.identifier ?? "unknown";
 
     if (!hasSupabaseConfig()) {
       const demoProgram = getDemoProgramBySlug(parsed.data.programSlug);

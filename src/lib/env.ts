@@ -14,3 +14,11 @@ export function hasWorldConfig() {
       process.env.WORLD_RP_SIGNING_KEY,
   );
 }
+
+export function isWorldBypassEnabled() {
+  return (
+    process.env.NODE_ENV !== "production" &&
+    process.env.WORLD_ID_BYPASS === "true" &&
+    process.env.NEXT_PUBLIC_WORLD_ID_BYPASS === "true"
+  );
+}

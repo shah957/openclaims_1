@@ -21,6 +21,7 @@ export function VerifyButton({
   onDuplicate,
 }: VerifyButtonProps) {
   const { pushToast } = useToast();
+  const bypassEnabled = process.env.NEXT_PUBLIC_WORLD_ID_BYPASS === "true";
   const [state, setState] = useState<
     "idle" | "loading" | "verifying" | "success" | "duplicate" | "error"
   >("idle");
@@ -29,6 +30,51 @@ export function VerifyButton({
   );
   const [connectorUri, setConnectorUri] = useState<string | null>(null);
   const action = useMemo(() => getWorldAction(programSlug), [programSlug]);
+
+  async function handleBypassVerification() {
+    setState("loading");
+    setMessage("Creating a local test claim without World ID...");
+
+    try {
+      const verifyResponse = await fetch("/api/verify-proof", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          programSlug,
+          bypass: true,
+        }),
+      });
+
+      const verifyPayload = await verifyResponse.json();
+
+      if (!verifyResponse.ok) {
+        throw new Error(verifyPayload.message ?? "Bypass verification failed.");
+      }
+
+      setState("success");
+      setMessage("Local test bypass complete. Your claim form is ready below.");
+      pushToast({
+        title: "Bypass enabled",
+        description: "The public claim form is unlocked for local testing.",
+        tone: "success",
+      });
+      onVerified(verifyPayload.data);
+    } catch (error) {
+      const nextError =
+        error instanceof Error
+          ? error.message
+          : "Bypass verification did not complete successfully.";
+      setState("error");
+      setMessage(nextError);
+      pushToast({
+        title: "Bypass failed",
+        description: nextError,
+        tone: "error",
+      });
+    }
+  }
 
   async function handleVerification() {
     if (!process.env.NEXT_PUBLIC_WORLD_APP_ID) {
@@ -174,6 +220,17 @@ export function VerifyButton({
           ? "Verification In Progress..."
           : "Verify With World ID"}
       </button>
+
+      {bypassEnabled ? (
+        <button
+          className="w-full rounded-full border border-slate-300 bg-white px-5 py-3 font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+          disabled={state === "loading" || state === "verifying"}
+          onClick={handleBypassVerification}
+          type="button"
+        >
+          Use Local Test Bypass
+        </button>
+      ) : null}
     </div>
   );
 }
