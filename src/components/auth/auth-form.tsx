@@ -1,13 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useToast } from "@/components/shared/toast-provider";
 
 type AuthMode = "sign-in" | "sign-up";
 
-export function AuthForm() {
+export function AuthForm({ nextPath = "/dashboard" }: { nextPath?: string }) {
+  const router = useRouter();
   const { pushToast } = useToast();
   const [mode, setMode] = useState<AuthMode>("sign-in");
   const [email, setEmail] = useState("");
@@ -53,6 +55,11 @@ export function AuthForm() {
             : "Your organizer account was created successfully.",
         tone: "success",
       });
+
+      if (mode === "sign-in") {
+        router.replace(nextPath);
+        router.refresh();
+      }
     } catch (authError) {
       const nextError =
         authError instanceof Error
@@ -175,7 +182,7 @@ export function AuthForm() {
         <div className="mt-6 text-sm text-slate-600">
           <Link
             className="font-medium text-[var(--color-accent)] underline-offset-4 hover:underline"
-            href="/dashboard"
+            href={nextPath}
           >
             Go to dashboard
           </Link>
