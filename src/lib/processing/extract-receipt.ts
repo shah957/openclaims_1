@@ -1,6 +1,4 @@
 import OpenAI from "openai";
-import { PDFParse } from "pdf-parse";
-import { createWorker } from "tesseract.js";
 import type { ExtractionResult } from "@/types/claims";
 
 const STRUCTURING_SYSTEM_PROMPT = `You are a receipt data extraction system for reimbursement claims.
@@ -68,6 +66,7 @@ function getExtractionClientConfig() {
 }
 
 async function runImageOcr(fileBuffer: Buffer): Promise<string> {
+  const { createWorker } = await import("tesseract.js");
   const worker = await createWorker("eng");
 
   try {
@@ -79,6 +78,7 @@ async function runImageOcr(fileBuffer: Buffer): Promise<string> {
 }
 
 async function extractTextFromPdf(fileBuffer: Buffer): Promise<string> {
+  const { PDFParse } = await import("pdf-parse");
   const parser = new PDFParse({ data: new Uint8Array(fileBuffer) });
 
   try {
