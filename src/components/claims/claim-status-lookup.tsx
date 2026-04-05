@@ -89,10 +89,6 @@ export function ClaimStatusLookup({
         throw new Error(signaturePayload.message ?? "Unable to create lookup session.");
       }
 
-      const signal =
-        globalThis.crypto?.randomUUID?.() ??
-        `claim-status-${Date.now().toString()}`;
-
       const request = await IDKit.request({
         app_id: process.env.NEXT_PUBLIC_WORLD_APP_ID as `app_${string}`,
         action,
@@ -102,7 +98,7 @@ export function ClaimStatusLookup({
             : "staging",
         rp_context: signaturePayload.data,
         allow_legacy_proofs: true,
-      }).preset(getWorldLegacyPreset(signal));
+      }).preset(getWorldLegacyPreset());
 
       setConnectorUri(request.connectorURI || null);
       setState("verifying");
