@@ -62,29 +62,16 @@ export function ClaimDetail({ claim }: { claim: DashboardClaim }) {
                     <span className="font-semibold text-[var(--color-primary)]">
                       {claim.extraction_result.debug.provider ?? "unknown"}
                     </span>
-                    {" · "}
-                    OCR:{" "}
-                    <span className="font-semibold text-[var(--color-primary)]">
-                      {claim.extraction_result.debug.ocr_engine ?? "unknown"}
-                    </span>
+                    {claim.extraction_result.debug.model
+                      ? ` · Model: ${claim.extraction_result.debug.model}`
+                      : ""}
                   </p>
                 </div>
-
-                {claim.extraction_result.debug.raw_text ? (
-                  <div className="rounded-2xl bg-white p-4">
-                    <p className="text-xs uppercase tracking-wide text-slate-500">
-                      OCR text
-                    </p>
-                    <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap break-words text-xs text-slate-700">
-                      {claim.extraction_result.debug.raw_text}
-                    </pre>
-                  </div>
-                ) : null}
 
                 {claim.extraction_result.debug.llm_output_raw ? (
                   <div className="rounded-2xl bg-white p-4">
                     <p className="text-xs uppercase tracking-wide text-slate-500">
-                      Llama output
+                      Gemini output
                     </p>
                     <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap break-words text-xs text-slate-700">
                       {claim.extraction_result.debug.llm_output_raw}

@@ -31,7 +31,7 @@ const requiredEnvGroups = [
 const optionalEnvGroups = [
   {
     name: "Processing and notifications",
-    keys: ["OPENAI_API_KEY", "RESEND_API_KEY", "RESEND_FROM_EMAIL"],
+    keys: ["GEMINI_API_KEY", "RESEND_API_KEY", "RESEND_FROM_EMAIL"],
   },
 ];
 
@@ -76,7 +76,7 @@ for (const group of optionalEnvGroups) {
     printKeyStatus(key, Boolean(process.env[key]));
   }
 }
-console.log("  [info] Receipt extraction can use OPENAI_API_KEY or RCAC_GENAI_API_KEY.");
+console.log("  [info] Receipt extraction uses GEMINI_API_KEY when configured.");
 
 printSection("Required files");
 for (const file of requiredFiles) {

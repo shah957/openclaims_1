@@ -55,7 +55,7 @@ This file is the live implementation checkpoint against the phase docs:
 
 ### Phase 4
 
-- Receipt extraction helper implemented with safe fallback when OpenAI is missing.
+- Receipt extraction now runs through Gemini with a safe low-confidence fallback when Gemini is unavailable or fails.
 - Duplicate document hashing/check helper implemented.
 - Rules engine implemented.
 - Document processing route updates claim/document status.

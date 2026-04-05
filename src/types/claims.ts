@@ -26,11 +26,8 @@ export interface ExtractionResult {
   confidence: number;
   debug?: {
     source: "llm" | "heuristic";
-    provider?: "gemini" | "rcac" | "openai" | "none";
+    provider?: "gemini" | "none";
     model?: string;
-    ocr_engine?: "tesseract" | "pdf-text" | "pdf-ocr";
-    raw_text?: string;
-    llm_input_excerpt?: string;
     llm_output_raw?: string | null;
   };
 }

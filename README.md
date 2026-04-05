@@ -1,6 +1,6 @@
 # OpenClaims Ops
 
-OpenClaims Ops is a Catapult Hacks 2026 project for running reimbursement, stipend, and grant claim programs with proof-of-personhood at the front door. Claimants verify with World ID, upload supporting documents, pass through OCR and rule checks, and then move into auto-approval, auto-rejection, or a human review queue.
+OpenClaims Ops is a Catapult Hacks 2026 project for running reimbursement, stipend, and grant claim programs with proof-of-personhood at the front door. Claimants verify with World ID, upload supporting documents, pass through Gemini-powered extraction and rule checks, and then move into auto-approval, auto-rejection, or a human review queue.
 
 ## What is in the app
 
@@ -15,7 +15,7 @@ OpenClaims Ops is a Catapult Hacks 2026 project for running reimbursement, stipe
 - React 19
 - Supabase Auth, Postgres, and Storage
 - World ID / IDKit
-- OpenAI for receipt extraction fallback-aware processing
+- Gemini for receipt and proof document extraction
 - Resend for outbound claim notifications
 - Tailwind CSS and Recharts
 
@@ -54,12 +54,8 @@ Optional but recommended:
 
 - `NEXT_PUBLIC_WORLD_ID_BYPASS` and `WORLD_ID_BYPASS` for local-only World ID bypass during testing
 - `GEMINI_API_KEY` for Gemini-based receipt extraction
-- `GEMINI_BASE_URL` to override the Gemini OpenAI-compatible endpoint
+- `GEMINI_BASE_URL` to override the Gemini-compatible endpoint
 - `GEMINI_MODEL` to choose the Gemini extraction model; defaults to `gemini-3-flash-preview`
-- `OPENAI_API_KEY` for OpenAI-based receipt extraction
-- `RCAC_GENAI_API_KEY` for Purdue RCAC GenAI Studio receipt extraction
-- `RCAC_GENAI_BASE_URL` if you need to override the default RCAC endpoint
-- `RCAC_GENAI_MODEL` to pick a different RCAC model; defaults to `llama4:latest`
 - `RESEND_API_KEY` and `RESEND_FROM_EMAIL` for live email delivery
 - `DEMO_SEED_ENABLED` if you want to gate demo-only flows
 
