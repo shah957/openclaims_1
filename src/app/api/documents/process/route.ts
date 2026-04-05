@@ -85,7 +85,10 @@ export async function POST(request: Request) {
     const fileResponse = await fetch(signedUrlData.signedUrl);
     const fileBuffer = Buffer.from(await fileResponse.arrayBuffer());
     const duplicateHash = computeDocumentHash(fileBuffer);
-    const extraction = await extractReceiptData(signedUrlData.signedUrl);
+    const extraction = await extractReceiptData({
+      fileBuffer,
+      contentType: fileResponse.headers.get("content-type"),
+    });
     const duplicateCheck = await checkDuplicateDocument(
       claim.program_id,
       duplicateHash,
